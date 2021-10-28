@@ -1,3 +1,3 @@
 # BlackJack
 
-Currently in progress and changing codes from the older version. Uploading the files here so that if anything goes wrong, I don't have to start from the beginning.
+Currently in progress and updating codes from the older version. Uploading the base files here so there's no need to start from scratch if something goes wrong.
