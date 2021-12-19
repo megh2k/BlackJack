@@ -1,3 +1,2 @@
 # BlackJack
-
-The project is currently in progress. This project would be a better, advanced and a more functioning version of the previous program, which would allow more players to play the game and even place bets. It would also include Exception handeling, better organized and with more clarity.
+This project is a better version of the previous one. This version now allows upto 5 players to play the game(increased from 1) + the dealer. This version has exception handeling, better organized than the previous one, and shows the names of players who got a blackjack or got bust(if any) at the end of the game. It displays player names(may be multiple) who scored the highest points and won that round of the game.
