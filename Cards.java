@@ -17,7 +17,7 @@ public class Cards {
 		Cards.noc =0;
 		usedCards = new String[52];
 	}
-	
+
 	public String getCard() {
 		this.card = deck.finalDeck.get(noc);
 		return this.card;
@@ -26,6 +26,7 @@ public class Cards {
 	public void addCard(String s) {
 		this.usedCards[Cards.noc] = s;
 		Cards.noc++;
+		removeCard(s);
 	}
 
 	public void removeCard(String s) {
@@ -44,9 +45,8 @@ public class Cards {
 	public int getNumberOfCards() {
 		return Cards.noc;
 	}
-
-
-	public int getValue(String numberedCard) {
+	
+	public int getValue(String numberedCard){
 
 		if(this.card.contains("2")){
 			value = 2;
@@ -84,22 +84,58 @@ public class Cards {
 		else if(this.card.contains("King")){
 			value = 10;
 		}
-		
+
 		else {
+			
+			boolean flag = false;
 			System.out.print("Drawn card is an Ace. Value should be 1 or 11? ");
-						value = scan.nextInt();
+
+			while(!flag) {				
+				
+				try {
+					value = scan.nextInt();
+					if(value==1 || value == 11) {
+						flag = true;
+					}
+					
+					else {
+						throw new ValueNotCorrect("");
+					}
+				}
+				
+				catch(Exception e) {
+					System.out.println( e + "Input value not correct. Value of Ace should be 1 or 11?");
+					scan.next();
+
+				}
+
+//				
+//				finally {
+//					if(flag == true) {
+//						
+//					}
+//					else {
+//						value = scan.nextInt();
+//
+//					}
+//					
+//				}
+				
+				
+			}
+
 		}
-		
+
 		this.score +=value;
-		
+
 		return value;
 	}
 
 	public int getScore() {
-		
+
 		return this.score;
 	}
-	
+
 	public void setScore() {
 		this.score = 0;
 	}

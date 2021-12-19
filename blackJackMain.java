@@ -3,147 +3,98 @@ import java.util.*;
 
 public class blackJackMain {
 
-	public static void main(String[] args) {
-
+	public static void main(String[] args){
+		BlackJack bj = new BlackJack();
 		Scanner scan = new Scanner(System.in);
 		String command = null;// input string given by the user
 		String player = null;//player name
 		String update = null;// return string
-		System.out.println("Welcome to BlackJack \n\n");
+		int nop = 0;
 
+		System.out.println("Welcome to BlackJack \n");
+		System.out.println("Enter the number of players(max 3):");
 
-		System.out.print("Enter player name: ");
-		player = scan.next();
-
-//		System.out.print("Type Hit to start the game: ");
-//		command = scan.next().toLowerCase();
-
-		deck d1 = new deck();
-		Cards c1 = new Cards();
-		Player p1 = new Player(player, d1, c1);
-		BlackJack bj = new BlackJack(p1);
-		p1.getDeck().createDeck();
-
-		for(int i=0; i<2; i++) {
-			
-			bj.addPlayer(p1);
-
-			System.out.print("Type Hit to start the game: ");
-			command = scan.next().toLowerCase();		
-			boolean flag = command.equals("hit") || command.equals("stand");
-			
-			
-			while(!flag) {
-				
-				try {
-					throw new NonValidStringValue("Invalid Input");
-				}
-
-				catch(NonValidStringValue e) {
-					System.out.println("Invalid Input");
-				}
-
-				finally{
-					System.out.println("Hit or Stand: ");
-					command = scan.next().toLowerCase();
-					flag = command.equals("hit") || command.equals("stand");
-				}
+		boolean flag = false;
+		while(!flag) {
+			try {
+				nop = scan.nextInt();
+				flag = true;
 			}
 
-			while(command.equals("hit")) {
+			catch(Exception e){
+				System.out.println("Invalid input: " +e);
+				System.out.println("Please enter valid input: ");
+				scan.next();
+			}
 
-				System.out.println("Card drawn: "+ p1.getCards().getCard());
-				p1.getCards().getValue(p1.getCards().getCard());
-				p1.getCards().addCard(p1.getCards().getCard());
+		}
+
+		for(int i=0; i<=nop; i++) {		//playing the game and storing the data
+			update = "";
+
+			if(i==nop) {		//if its time for dealer
+				System.out.println("\n Dealer playing");
+				player = "Dealer";		
+			}
+			else {
+				System.out.print("Enter player name: ");
+				player = scan.next();
+			}
+
+			Player p1 = new Player(player);
+			p1.createDeck();
+			bj.addPlayer(p1);
 
 
-				if(p1.getCards().getScore() ==21) {
+			System.out.print("Type Hit to start the game: ");
+			command = bj.checkCommand(scan.next().toLowerCase());
+
+			while(command.equals("hit")) {		//start when input is correct
+
+				System.out.println("Card drawn: "+ p1.getCard());
+
+				p1.getValue(p1.getCard());		//value of Ace 1 or 11
+				p1.addCard(p1.getCard());
+
+				if(p1.getScore() ==21) {		//if player got blackjack
 					System.out.println(p1.getName() +" got a blackJack!");
 					update = "BlackJack";
-					break;
+					p1.setUpdate("BlackJack");
+					//break;
 				}
 
-				else if(p1.getCards().getScore()>21) {
+				else if(p1.getScore()>21) {		//if player is bust
 					System.out.println(p1.getName() +" got bust!");
+					p1.setScore();
 					update = "Bust";
-					p1.getCards().setScore();
-					System.out.println("Score is: " +p1.getCards().getScore() +"\n");
-					break;
+					p1.setUpdate("Bust");
+					//break;
 				}
 
-				System.out.println("Score is: " +p1.getCards().getScore() +"\n");
-
+				System.out.println("Score is: " +p1.getScore() +"\n");
+				if(update.equals("BlackJack") || update.equals("Bust")) {
+					System.out.println("Used cards: "+Arrays.toString(p1.getUsedCards()) +"\n");
+					break;
+				}
 				System.out.println("Hit or Stand: ");
 
 
-				command = scan.next().toLowerCase();
-
-				flag = command.equals("hit") || command.equals("stand");
-				while(!flag) {
-					try {
-						throw new NonValidStringValue("Invalid Input");
-					}
-
-					catch(NonValidStringValue e) {
-						System.out.println("Invalid Input");
-					}
-
-					finally{
-						System.out.println("Hit or Stand: ");
-						command = scan.next().toLowerCase();
-						flag = command.equals("hit") || command.equals("stand");
-
-					}
-				}
-
+				command = bj.checkCommand(scan.next().toLowerCase());
 
 				if(command.equals("stand")) {
-					System.out.println("Score is: " +p1.getCards().getScore());
-					System.out.println("Used cards: "+Arrays.toString(c1.getUsedCards()) +"\n");
+					System.out.println("Score is: " +p1.getScore());
+					System.out.println("Used cards: "+Arrays.toString(p1.getUsedCards()) +"\n");
 					p1.updateString(update);
 
 				}
 				System.out.println();
-
-			}
-			if(i==0) {
-				System.out.println("\n Dealer playing");
-				d1 = new deck();
-				c1 = new Cards();
-				p1 = new Player("dealer", d1, c1);
-				player = "Dealer";		
-
-				p1.getDeck().createDeck();
-
-			}
-
-		}
-
-
-
-		if(bj.getPlayer()[0].getCards().getScore()>bj.getPlayer()[1].getCards().getScore()) {
-
-			if(bj.getPlayer()[0].getUpdate() == "BlackJack") {
-				System.out.println("Player " +bj.getPlayer()[0].getName() +" has won because they got a BlackJack!");
-			}
-			else {
-				System.out.println("Player " +bj.getPlayer()[0].getName() +" has won with a score of " +bj.getPlayer()[0].getCards().getScore());
 			}
 		}
-		else if(bj.getPlayer()[0].getCards().getScore()<bj.getPlayer()[1].getCards().getScore()) {
 
-			if(bj.getPlayer()[1].getUpdate() == "BlackJack") {
-				System.out.println("Dealer has won because they got a BlackJack!");
-			}
+		//comparing the data and declaring the winners
 
-			else {
-				System.out.println("Dealer has won with a score of " +bj.getPlayer()[1].getCards().getScore());
-			}
-		}
-		else {
-			System.out.println("Both individuals had same score of "+bj.getPlayer()[0].getCards().getScore() +". Tied round");
-		}
-
+		System.out.println(bj.checkBj());
+		System.out.println(bj.finalReport());
 
 
 		scan.close();
